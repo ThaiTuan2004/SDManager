@@ -13,6 +13,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             scope.launch {
                 navigateNotFound(getString(R.string.granted), false)
                 delay(1500)
-                navController.navigate(R.id.rootFragment)
+                navController.navigate(R.id.rootFragment, NavOptions.Builder().setPopUpTo(navController.graph.startDestinationId, true).build())
             }
         }
         if (denied.isNotEmpty()) {
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 navigateNotFound(getString(R.string.no_files_found))
                 return
             }
-            navController.navigate(R.id.rootFragment)
+            navController.navigate(R.id.rootFragment, NavOptions.Builder().setPopUpTo(navController.graph.startDestinationId, true).build())
         } else {
             navigateNotFound(getString(R.string.denied), false)
         }
@@ -104,7 +105,11 @@ class MainActivity : AppCompatActivity() {
             "msg" to message,
             "returnable" to returnable
         )
-        navController.navigate(R.id.notFound, bundle)
+        navController.navigate(
+            R.id.notFound,
+            bundle,
+            NavOptions.Builder().setPopUpTo(navController.graph.startDestinationId, true).build()
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
